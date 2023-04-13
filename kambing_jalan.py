@@ -43,13 +43,13 @@ def disabler():
 input_frame = tk.Frame(root)
 input_frame.pack(padx=10, pady=10, fill="x", expand=True)
 
-# input
+# input word
 labl = tk.Label(input_frame, text="insert words")
 labl.pack()
 runningText = tk.Entry(input_frame, text="Masukkan kata", textvariable=input)
 runningText.pack(padx=10,pady=10)
 
-# input
+# input delay
 labl = tk.Label(input_frame, text="delay/word (def:120)")
 labl.pack()
 times = tk.Entry(input_frame, textvariable=timesin)
