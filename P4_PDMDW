@@ -1,0 +1,71 @@
+import pandas as pd
+import numpy as np
+
+csv_path = "https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data"
+
+headers = ["symboling", "normalized-losses", "make", "fuel-type", "aspiration", "num-of-doors", "body-style",
+           "drive-wheels", "engine-location", "wheel-base", "length", "width", "height", "curb-weight",
+           "num-of-cylinders", "engine-size", "fuel-system", "bore", "stroke", "compression-ratio",
+           "horsepower", "peak-rpm", "city-mpg", "highway-mpg", "price"]
+
+df = pd.read_csv(csv_path, names=headers)
+df.replace("?", np.nan, inplace=True)
+print(df.head(5))
+
+missing_data = df.isnull()
+print(missing_data.head(5))
+
+for column in missing_data.columns.values.tolist():
+    print(column)
+    print (missing_data[column].value_counts())
+    print("")
+
+sum = df.isnull().sum()
+print(sum)
+
+# Mengganti nilai-nilai yang hilang dengan rata-rata
+df["normalized-losses"] = pd.to_numeric(df["normalized-losses"], errors="coerce")
+avg_norm_loss = df["normalized-losses"].astype("float").mean(axis=0)
+df["normalized-losses"].replace(np.nan, avg_norm_loss, inplace=True)
+print(avg_norm_loss)
+
+avg_bore = df['bore'].astype('float').mean()
+df["bore"].replace(np.nan, avg_bore, inplace=True)
+print(avg_bore)
+
+avg_stroke = df["stroke"].astype("float").mean()
+df["stroke"].replace(np.nan, avg_stroke, inplace=True)
+print(avg_stroke)
+
+avg_horsepower = df['horsepower'].astype('float').mean(axis=0)
+df['horsepower'].replace(np.nan, avg_horsepower, inplace=True)
+print(avg_horsepower)
+
+avg_peakrpm = df['peak-rpm'].astype('float').mean(axis=0)
+df['peak-rpm'].replace(np.nan, avg_peakrpm, inplace=True)
+print(avg_peakrpm)
+
+print(df['num-of-doors'].value_counts())
+df['num-of-doors'].value_counts().idxmax()
+df["num-of-doors"].replace(np.nan, "four", inplace=True)
+
+# drop baris dengan NaN dalam kolom "price"
+df.dropna(subset=["price"], axis=0, inplace=True)
+# reset index, karena kita menge-drop 2 baris
+df.reset_index(drop=True, inplace=True)
+print(df.head())
+print(df.isnull().sum())
+
+print(df.dtypes)
+df[["bore", "stroke"]] = df[["bore", "stroke"]].astype("float")
+print(df[["bore", "stroke"]])
+
+# Replace non-integer values and missing values with NaN
+# df["normalized-losses"] = pd.to_numeric(df["normalized-losses"], errors="coerce")
+df[["normalized-losses"]] = df[["normalized-losses"]].astype("int")
+print(df[["normalized-losses"]])
+
+df[["price"]] = df[["price"]].astype("float")
+df[["peak-rpm"]] = df[["peak-rpm"]].astype("float")
+print(df[["peak-rpm"]])
+
